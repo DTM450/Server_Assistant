@@ -124,8 +124,6 @@ client.on('message', (message) =>
       if (SC == DTMserver){cooldown[1] = 1};
       if (SC == GCserver){cooldown[2] = 1};
 
-      console.log(SC)
-
       if (message.member.roles.has(SC.roleID))
       {
 
