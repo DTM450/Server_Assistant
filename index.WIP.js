@@ -44,8 +44,6 @@ client.on('ready', () =>
 client.on('message', (message) => 
 {
 
-  // console.log(guild.name)
-
   if (message.author.bot) return;
 
   if (message.guild.id == TSserver.guildID){var SC = TSserver;var SCCooldown = cooldown[0];};
