@@ -48,9 +48,9 @@ client.on('message', (message) =>
 
   if (message.author.bot) return;
 
-  if (message.guild.id == TSserver.guildNameID){var SC = TSserver;var SCCooldown = cooldown[0];};
-  if (message.guild.name == DTMserver.guildName){var SC = DTMserver;var SCCooldown = cooldown[1];};
-  if (message.guild.name == GCserver.guildName){var SC = GCserver;var SCCooldown = cooldown[2];};
+  if (message.guild.id == TSserver.guildID){var SC = TSserver;var SCCooldown = cooldown[0];};
+  if (message.guild.id == DTMserver.guildID){var SC = DTMserver;var SCCooldown = cooldown[1];};
+  if (message.guild.id == GCserver.guildID){var SC = GCserver;var SCCooldown = cooldown[2];};
 
   if (message.content.indexOf(SC.prefix) !== 0) return;
 
@@ -60,9 +60,9 @@ client.on('message', (message) =>
   // console.log(args)
 
   console.log(os.EOL);
-  console.log(`User: ${message.author.tag}`);
+  console.log(`User: ${message.author.tag}, ID: ${message.author.id}`);
   console.log(`Server Name: ${message.guild.name}`);
-  console.log(`!${command}`);
+  console.log(`${SC.prefix}${command}`);
 
   if (command === 'ping')
   {
@@ -77,7 +77,6 @@ client.on('message', (message) =>
   if (command === 'test')
   {
 
-    console.log(message.guild.roles.findAll('id'))
     //console.log(cooldown[0]);
     //console.log(cooldown[1]);
     //console.log(cooldown[2]);
@@ -125,7 +124,9 @@ client.on('message', (message) =>
       if (SC == DTMserver){cooldown[1] = 1};
       if (SC == GCserver){cooldown[2] = 1};
 
-      if (message.member.roles.find('id', SC.guildRoleID)) //TODO fix this, guildRoleID not found in roles
+      console.log(SC)
+
+      if (message.member.roles.has(SC.roleID))
       {
 
         console.log(`${SC.guildName} on cooldown`);

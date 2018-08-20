@@ -1,0 +1,10 @@
+
+*.lnk
+*.bat
+.eslintrc.json
+Backups/*
+config.json
+node_modules/*
+package-lock.json
+Servers/*
+!Servers/ExampleServer.json
