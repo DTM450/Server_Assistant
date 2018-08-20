@@ -1,0 +1,19 @@
+{
+    "guildName":"ExampleServerName",
+    "guildNameID":"#guildID#",
+    "guildRoleID":"#roleID#",
+    "serverIP":"#IPAddress",
+    "serverPort1":"#Port1#",
+    "serverPort2":"#Port2#",
+    "serverPort3":"#Port3#",
+    "statusUpMessage":"Server is already up.",
+    "statusDownMessage":"Server is down.",
+    "startMessage":"Server is down, starting server. This may take a minute.",
+    "cooldownMessage":"Command is on cooldown, please wait.",
+    "timeOut":"60000",
+    "serverPath1":"#server1.bat",
+    "serverPath2":"#server2.bat",
+    "serverPath3":"#server3.bat",
+    "serverList":"MC Server 1, MC Server 2, MC Server 3",
+    "prefix": "$"
+}
