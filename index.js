@@ -182,7 +182,7 @@ client.on('message', (message) =>
   
       if(message.author.id === config.ownerID)
       {
-        process.exitCode = 0;
+        process.exitCode(0);
       }
   
     }
