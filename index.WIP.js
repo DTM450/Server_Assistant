@@ -44,25 +44,23 @@ client.on('ready', () =>
 client.on('message', (message) => 
 {
 
-  if (message.author.bot) return;
+  if(message.author.bot) return;
 
-  if (message.guild.id == TSserver.guildID){var SC = TSserver;var SCCooldown = cooldown[0];};
-  if (message.guild.id == DTMserver.guildID){var SC = DTMserver;var SCCooldown = cooldown[1];};
-  if (message.guild.id == GCserver.guildID){var SC = GCserver;var SCCooldown = cooldown[2];};
+  if(message.guild.id == TSserver.guildID){var SC = TSserver;var SCCooldown = cooldown[0];};
+  if(message.guild.id == DTMserver.guildID){var SC = DTMserver;var SCCooldown = cooldown[1];};
+  if(message.guild.id == GCserver.guildID){var SC = GCserver;var SCCooldown = cooldown[2];};
 
-  if (message.content.indexOf(SC.prefix) !== 0) return;
+  if(message.content.indexOf(SC.prefix) !== 0) return;
 
   const args = message.content.slice(SC.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
 
-  // console.log(args)
-
   console.log(os.EOL);
-  console.log(`User: ${message.author.tag}, ID: ${message.author.id}`);
   console.log(`Server Name: ${message.guild.name}`);
-  console.log(`${SC.prefix}${command}`);
+  console.log(`User: ${message.author.tag}, ID: ${message.author.id}`);
+  console.log(`Pf: ${SC.prefix}, Cmd: ${command}, Args: ${args}`);
 
-  if (command === 'ping')
+  if(command === 'ping')
   {
 
     message.channel.send('Self Pinging...').then((msg) => {
@@ -72,7 +70,7 @@ client.on('message', (message) =>
   }
 
 
-  if (command === 'test')
+  if(command === 'test')
   {
 
     //console.log(cooldown[0]);
@@ -112,37 +110,37 @@ client.on('message', (message) =>
     });
   } */
 
-  if (command === 'startserver')
+  if(command === 'startserver')
   {
     
-    if (SCCooldown == 0)
+    if(SCCooldown == 0)
     {
 
-      if (SC == TSserver){cooldown[0] = 1};
-      if (SC == DTMserver){cooldown[1] = 1};
-      if (SC == GCserver){cooldown[2] = 1};
+      if(SC == TSserver){cooldown[0] = 1};
+      if(SC == DTMserver){cooldown[1] = 1};
+      if(SC == GCserver){cooldown[2] = 1};
 
-      if (message.member.roles.has(SC.roleID))
+      if(message.member.roles.has(SC.roleID))
       {
 
         console.log(`${SC.guildName} on cooldown`);
         setTimeout(() =>
         {
                 
-          if (SC == TSserver){cooldown[0] = 0};
-          if (SC == DTMserver){cooldown[1] = 0};
-          if (SC == GCserver){cooldown[2] = 0};
+          if(SC == TSserver){cooldown[0] = 0};
+          if(SC == DTMserver){cooldown[1] = 0};
+          if(SC == GCserver){cooldown[2] = 0};
               
         },SC.timeOut);
 
         message.channel.send('Checking if server is up.')
 
-        tcpp.probe(SC.serverIP,SC.serverPort,function(err, result)
+        tcpp.probe(SC.serverIP,SC.serverPort1,function(err, result)
         {
 
           //console.log(`Result: ${result}`);
 
-          if (result == true)
+          if(result == true)
           {
 
             console.log('Server is up.');
@@ -158,10 +156,10 @@ client.on('message', (message) =>
             console.log(SC.startMessage);
             message.channel.send(SC.startMessage);
 
-            childProcess.exec(`start ${SC.serverPath}`, function (err, stdout, stderr)
+            childProcess.exec(`start ${SC.serverPath1}`, function (err, stdout, stderr)
             {
 
-              if (err)
+              if(err)
               {
 
                 console.error(err);
@@ -179,7 +177,7 @@ client.on('message', (message) =>
       
       {
       
-          message.channel.send('You do not have permission to use that command!');
+        message.channel.send('You do not have permission to use that command!');
       
       }
     }
@@ -197,9 +195,9 @@ client.on('message', (message) =>
   if (command === 'kill')
   {
 
-    if(message.author.id === config.ownerID)
+    if (message.author.id === config.ownerID)
     {
-      process.exitCode = 0;
+      process.exit(0);
     }
 
   }
