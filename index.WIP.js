@@ -55,6 +55,8 @@ client.on('message', (message) =>
   const args = message.content.slice(SC.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
 
+// todo make args array lowercase
+
   console.log(os.EOL);
   console.log(`Server Name: ${message.guild.name}`);
   console.log(`User: ${message.author.tag}, ID: ${message.author.id}`);
@@ -80,35 +82,22 @@ client.on('message', (message) =>
   }
 
 
-/*   if (command === 'status')
+  if (command === 'info' || 'help')
   {
+    //TODO add cooldown and add servername commands, add help command
+    if (args[1] == undefined)
+    { 
+      //todo make info embed work from json files
+      message.channel.send(`Test Post.\nPost will be deleted in 5 seconds.`).then((msg) => {msg.delete(5000);});
 
-    console.log(`Running tcp-ping for Minecraft server ${config.serverIP}:${config.serverPort1}.`)
-    message.channel.send('Probing Server.');
+    }
 
-    tcpp.probe(config.serverIP,config.serverPort,function(err, result)
+    if (args[1] == 'all')
     {
-//      console.log(`Result: ${result}`);
+      message.channel.send();
+    }
 
-      if (result == true)
-      {
-
-        console.log('Server is up.');
-        message.channel.send('Minecraft server is up.');
-
-      } 
-      
-      else
-
-      {
-
-        console.log('Server is down.');
-        message.channel.send('Minecraft server is down.');
-
-      }
-
-    });
-  } */
+  }
 
   if(command === 'startserver')
   {
