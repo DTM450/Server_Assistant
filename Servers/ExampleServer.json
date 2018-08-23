@@ -15,5 +15,16 @@
     "serverPath2":"#server2.bat",
     "serverPath3":"#server3.bat",
     "serverList":"MC Server 1, MC Server 2, MC Server 3",
-    "prefix": "$"
+    "prefix": "$",
+    "embed": {"embed":
+        {
+        "title":"Info",
+        "description":"Info gives you more info",
+        "fields":
+            [{
+            "name":"Field",
+            "value":"value"
+            }]
+        }
+    }
 }
