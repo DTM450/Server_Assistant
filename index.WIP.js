@@ -29,11 +29,11 @@ client.on('ready', () =>
 
   if(__filename.substr(-12,) === 'index.WIP.js')
   {
+    client.user.setActivity('DTM450 teach me', { type: 'LISTENING'});
     client.user.setStatus('dnd');
-    client.user.setActivity('DTM450 teach me', { type: 'LISTENING'}).then(presence => console.log(`Activity set to ${presence.game ? presence.game.name : 'none'}`)).catch(console.error);
   };
 
-  if(__filename.substr(-9,) === 'index.js')
+  if(__filename.substr(-8,) === 'index.js')
   {
     // TODO add a help command and add command to activity
     // client.user.setActivity(, { type: 'PLAYING'}).then(presence => console.log(`Activity set to ${presence.game ? presence.game.name : 'none'}`)).catch(console.error);
@@ -43,17 +43,32 @@ client.on('ready', () =>
 
 client.on('message', (message) => 
 {
+  try
+  {
+    processing(message);
+  }
 
+  catch(err)
+  {
+    message.channel.send(`Its Broken.\nStack Trace.\n\`\`\`${err.name}\n ${err.stack}\`\`\``)
+  }
+
+});
+
+function processing(message)
+{
   if(message.author.bot) return;
 
-  if(message.guild.id == TSserver.guildID){var SC = TSserver;var SCCooldown = cooldown[0];};
-  if(message.guild.id == DTMserver.guildID){var SC = DTMserver;var SCCooldown = cooldown[1];};
-  if(message.guild.id == GCserver.guildID){var SC = GCserver;var SCCooldown = cooldown[2];};
+  if(message.guild.id == TSserver.guildID){var SC = TSserver;var SCCooldown = cooldown[0];}
+  else if(message.guild.id == DTMserver.guildID){var SC = DTMserver;var SCCooldown = cooldown[1];}
+  else if(message.guild.id == GCserver.guildID){var SC = GCserver;var SCCooldown = cooldown[2];};
 
   if(message.content.indexOf(SC.prefix) !== 0) return;
 
   const args = message.content.slice(SC.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
+  if(args[0] !== undefined){var subCommand = args.shift().toLowerCase();}
+  else {var subCommand = null;};
 
 // todo make args array lowercase
 
@@ -62,7 +77,7 @@ client.on('message', (message) =>
   console.log(`User: ${message.author.tag}, ID: ${message.author.id}`);
   console.log(`Pf: ${SC.prefix}, Cmd: ${command}, Args: ${args}`);
 
-  if(command === 'ping')
+  if (command === 'ping')
   {
 
     message.channel.send('Self Pinging...').then((msg) => {
@@ -72,7 +87,7 @@ client.on('message', (message) =>
   }
 
 
-  if(command === 'test')
+  else if (command === 'test')
   {
 
     //console.log(cooldown[0]);
@@ -82,24 +97,21 @@ client.on('message', (message) =>
   }
 
 
-  if (command === 'info' || 'help')
+  else if (command === 'info' || command ===  'help')
   {
-    //TODO add cooldown and add servername commands, add help command
-    if (args[1] == undefined)
-    { 
-      //todo make info embed work from json files
-      message.channel.send(`Test Post.\nPost will be deleted in 5 seconds.`).then((msg) => {msg.delete(5000);});
-
-    }
-
-    if (args[1] == 'all')
+    if (subCommand === 'all')
     {
-      message.channel.send();
+      message.channel.send('all');
     }
 
+    //TODO add cooldown and add servername commands, add help command
+    else
+    { 
+      message.channel.send(SC.info).then((msg) => {msg.delete(5000);});
+    };
   }
 
-  if(command === 'startserver')
+  else if (command === 'startserver')
   {
     
     if(SCCooldown == 0)
@@ -181,7 +193,7 @@ client.on('message', (message) =>
 
   }
 
-  if (command === 'kill')
+  else if (command === 'kill')
   {
 
     if (message.author.id === config.ownerID)
@@ -191,6 +203,11 @@ client.on('message', (message) =>
 
   }
 
-});
+  else if (command === 'throwerr')
+  {
+    let e = new Error('This is a test error.');
+    throw e;
+  }
+};
 
 client.login(config.token);
