@@ -1,9 +1,11 @@
 
 *.lnk
 *.bat
+*.url
 .eslintrc.json
 Backups/*
 config.json
+Lookup Later/*
 node_modules/*
 package-lock.json
 Servers/*
