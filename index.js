@@ -1,34 +1,38 @@
-/* eslint consistent-return: 0, no-console: 0 */
+/* eslint-disable no-undef */
+/* eslint-disable max-len */
+/* eslint-disable no-shadow */
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-console */
 
 const os = require('os');
+
+const fs = require('fs');
 
 const tcpp = require('tcp-ping');
 
 const Discord = require('discord.js');
-const config = require('./config.json');
-const package = require('./package.json');
-
 const childProcess = require('child_process');
-childProcess.exec(`title ${package.name} - ${package.main}`);
+const Pkg = require('./package.json');
+const config = require('./config.json');
+
+
+childProcess.exec(`title ${Pkg.name} - ${Pkg.main}`);
 
 const client = new Discord.Client();
-const guild = new Discord.Guild();
+// const guild = new Discord.Guild();
 
-const TSserver = require(`./Servers/TSserver.json`);
-const DTMserver = require(`./Servers/DTMserver.json`);
-const GCserver = require(`./Servers/GCserver.json`);
+const TSserver = require('./Servers/TSserver.json');
+const DTMserver = require('./Servers/DTMserver.json');
+const GCserver = require('./Servers/GCserver.json');
 
-var cooldown = [0,0,0];
+const cooldown = [0, 0, 0];
 
 
-client.on('ready', () =>
-{
+client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
-client.on('message', (message) => 
-{
-
+client.on('message', (message) => {
   // console.log(guild.name)
 
   if (message.author.bot) return;
@@ -43,21 +47,18 @@ client.on('message', (message) =>
   console.log(`Server Name: ${message.guild.name}`);
   console.log(`!${command}`);
 
-  if (message.guild.name == TSserver.guildName){var SC = TSserver;var SCCooldown = cooldown[0];};
-  if (message.guild.name == DTMserver.guildName){var SC = DTMserver;var SCCooldown = cooldown[1];};
-  if (message.guild.name == GCserver.guildName){var SC = GCserver;var SCCooldown = cooldown[2];};
+  if (message.guild.name === TSserver.guildName) { const SC = TSserver; const SCCooldown = cooldown[0]; }
+  if (message.guild.name === DTMserver.guildName) { const SC = DTMserver; const SCCooldown = cooldown[1]; }
+  if (message.guild.name === GCserver.guildName) { const SC = GCserver; const SCCooldown = cooldown[2]; }
 
-  if (command === 'ping')
-  {
-
+  if (command === 'ping') {
     message.channel.send('Self Pinging...').then((msg) => {
       msg.edit(`Pong! | Client Ping: ${msg.createdTimestamp - message.createdTimestamp}ms | API Latency is ${Math.round(client.ping)}ms`);
     });
-
   }
 
 
-/*   if (command === 'test')
+  /*   if (command === 'test')
   {
 
     console.log(cooldown[0]);
@@ -67,7 +68,7 @@ client.on('message', (message) =>
   } */
 
 
-/*   if (command === 'status')
+  /*   if (command === 'status')
   {
 
     console.log(`Running tcp-ping for Minecraft server ${config.serverIP}:${config.serverPort1}.`)
@@ -83,8 +84,8 @@ client.on('message', (message) =>
         console.log('Server is up.');
         message.channel.send('Minecraft server is up.');
 
-      } 
-      
+      }
+
       else
 
       {
@@ -96,97 +97,58 @@ client.on('message', (message) =>
 
     });
   } */
+  if (command === 'reload') {
+    const TSserver = fs.readFilesync('./Servers/TSserver.json');
+    const DTMserver = fs.readFilesync('./Servers/DTMserver.json');
+    const GCserver = fs.readFilesync('./Servers/GCserver.json');
+    const config = fs.readFilesync('./config.json');
+  }
 
-  if (command === 'startserver')
-  {
-    
-    if (SCCooldown == 0)
-    {
+  if (command === 'startserver') {
+    if (SCCooldown === 0) {
+      if (SC === TSserver) { cooldown[0] = 1; }
+      if (SC === DTMserver) { cooldown[1] = 1; }
+      if (SC === GCserver) { cooldown[2] = 1; }
 
-      if (SC == TSserver){cooldown[0] = 1};
-      if (SC == DTMserver){cooldown[1] = 1};
-      if (SC == GCserver){cooldown[2] = 1};
-
-      if (message.member.roles.find('name',`${SC.guildRole}`))
-      {
-
+      if (message.member.roles.find('name', `${SC.guildRole}`)) {
         console.log(`${SC.guildName} on cooldown`);
-        setTimeout(() =>
-        {
-                
-          if (SC == TSserver){cooldown[0] = 0};
-          if (SC == DTMserver){cooldown[1] = 0};
-          if (SC == GCserver){cooldown[2] = 0};
-              
-        },SC.timeOut);
+        setTimeout(() => {
+          if (SC === TSserver) { cooldown[0] = 0; }
+          if (SC === DTMserver) { cooldown[1] = 0; }
+          if (SC === GCserver) { cooldown[2] = 0; }
+        }, SC.timeOut);
 
-        message.channel.send('Checking if server is up.')
+        message.channel.send('Checking if server is up.');
 
-        tcpp.probe(SC.serverIP,SC.serverPort,function(err, result)
-        {
+        tcpp.probe(SC.serverIP, SC.serverPort, (err, result) => {
+          // console.log(`Result: ${result}`);
 
-          //console.log(`Result: ${result}`);
-
-          if (result == true)
-          {
-
+          if (result === true) {
             console.log('Server is up.');
             message.channel.send('Server is already up.');
-            return;
-
-          }
-
-          else
-            
-          {
-
+          } else {
             console.log(SC.startMessage);
             message.channel.send(SC.startMessage);
 
-            childProcess.exec(`start ${SC.serverPath}`, function (err, stdout, stderr)
-            {
-
-              if (err)
-              {
-
+            childProcess.exec(`start ${SC.serverPath}`, (err, stdout, stderr) => {
+              if (err) {
                 console.error(err);
-                return;
-
               }
             });
-        
           }
         });
-
+      } else {
+        message.channel.send('You do not have permission to use that command!');
       }
-
-      else
-      
-      {
-      
-          message.channel.send('You do not have permission to use that command!');
-      
-      }
-    }
-                    
-    else
-                
-    {
-
+    } else {
       message.channel.send(SC.cooldownMessage);
-
     }
+  }
 
-    if (command === 'kill')
-    {
-  
-      if(message.author.id === config.ownerID)
-      {
-        process.exitCode(0);
-      }
-  
+  if (command === 'kill') {
+    if (message.author.id === config.ownerID) {
+      process.exit(0);
     }
-
   }
 });
 
