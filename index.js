@@ -37,7 +37,12 @@ client.on('message', (message) => {
 
   if (message.author.bot) return;
 
-  if (message.content.indexOf(config.prefix) !== 0) return;
+  if (config.caseSensitivePrefix === false) {
+    const LowCasMes = message.content.toLowerCase();
+    if (LowCasMes.indexOf(config.prefix.toLowerCase()) !== 0) return;
+  } else if (config.caseSensitivePrefix === true) {
+    if (message.content.indexOf(config.prefix) !== 0) return;
+  }
 
   const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
@@ -45,7 +50,7 @@ client.on('message', (message) => {
   console.log(os.EOL);
   console.log(`User: ${message.author.tag}`);
   console.log(`Server Name: ${message.guild.name}`);
-  console.log(`!${command}`);
+  console.log(`${message.content.substring(0, `${config.prefix.length}`)}${command}`);
 
   if (message.guild.name === TSserver.guildName) { const SC = TSserver; const SCCooldown = cooldown[0]; }
   if (message.guild.name === DTMserver.guildName) { const SC = DTMserver; const SCCooldown = cooldown[1]; }
