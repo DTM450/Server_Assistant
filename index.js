@@ -44,7 +44,7 @@ client.on('message', (message) => {
   if (config.logChat === true) {
     if (message.channel.nsfw === false) {
       if (!fs.existsSync(`./chatLogs/${message.guild.name}/`)) {
-        fs.promises.mkdir(`./chatLogs/${message.guild.name}`, { recursive: true }).then(x => fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `Timestamp, M/E/D, Attachments, User, User ID\n"${message.createdAt}","${message.content}","${message.attachments.array()}","${message.author.tag}",${message.author.id}`));
+        fs.promises.mkdir(`./chatLogs/${message.guild.name}`, { recursive: true }).then(x => fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `TIMESTAMP,M/E/D,ATTACHMENTS,USER,USER ID\n"${message.createdAt}","${message.content}","${message.attachments.array()}","${message.author.tag}",${message.author.id}`));
       } else {
         fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `\n"${message.createdAt}","${message.content}","${message.attachments.array()}","${message.author.tag}",${message.author.id}`);
       }
@@ -175,7 +175,7 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
   if (config.logChat === true) {
     if (oldMessage.channel.nsfw === false) {
       if (!fs.existsSync(`./chatLogs/${oldMessage.guild.name}/`)) {
-        fs.promises.mkdir(`./chatLogs/${oldMessage.guild.name}`, { recursive: true }).then(x => fs.promises.appendFile(`./chatLogs/${oldMessage.guild.name}/${oldMessage.channel.id}.csv`, `Timestamp, M/E/D, Attachments, User, User ID\n"${oldMessage.editedAt}","${oldMessage}" => "${newMessage}","${newMessage.attachments.array()}","${oldMessage.author.tag}",${oldMessage.author.id}`));
+        fs.promises.mkdir(`./chatLogs/${oldMessage.guild.name}`, { recursive: true }).then(x => fs.promises.appendFile(`./chatLogs/${oldMessage.guild.name}/${oldMessage.channel.id}.csv`, `TIMESTAMP,M/E/D,ATTACHMENTS,USER,USER ID\n"${oldMessage.editedAt}","${oldMessage}" => "${newMessage}","${newMessage.attachments.array()}","${oldMessage.author.tag}",${oldMessage.author.id}`));
       } else {
         fs.promises.appendFile(`./chatLogs/${oldMessage.guild.name}/${oldMessage.channel.id}.csv`, `\n"${timeStamp}","${oldMessage}" => "${newMessage}","${newMessage.attachments.array()}","${oldMessage.author.tag}",${oldMessage.author.id}`);
       }
@@ -189,7 +189,7 @@ client.on('messageDelete', (message) => {
   if (config.logChat === true) {
     if (message.channel.nsfw === false) {
       if (!fs.existsSync(`./chatLogs/${message.guild.name}/`)) {
-        fs.promises.mkdir(`./chatLogs/${message.guild.name}`, { recursive: true }).then(x => fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `Timestamp, M/E/D, Attachments, User, User ID\n"${timeStamp}","${message}","${message.attachments.array()}","${message.author.tag}",${message.author.id}`));
+        fs.promises.mkdir(`./chatLogs/${message.guild.name}`, { recursive: true }).then(x => fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `TIMESTAMP,M/E/D,ATTACHMENTS,USER,USER ID\n"${timeStamp}","${message}","${message.attachments.array()}","${message.author.tag}",${message.author.id}`));
       } else {
         fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `\n"${timeStamp}","${message}","${message.attachments.array()}","${message.author.tag}",${message.author.id}`);
       }
