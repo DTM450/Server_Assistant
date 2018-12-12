@@ -35,14 +35,18 @@ client.on('ready', () => {
 client.on('message', (message) => {
   // console.log(guild.name)
 
+  if (message.guild.name === TSserver.guildName) { const SC = TSserver; const SCCooldown = cooldown[0]; }
+  if (message.guild.name === DTMserver.guildName) { const SC = DTMserver; const SCCooldown = cooldown[1]; }
+  if (message.guild.name === GCserver.guildName) { const SC = GCserver; const SCCooldown = cooldown[2]; }
+
   // TODO: get image url from message.attachments.array
 
   if (config.logChat === true) {
     if (message.channel.nsfw === false) {
       if (!fs.existsSync(`./chatLogs/${message.guild.name}/`)) {
-        fs.promises.mkdir(`./chatLogs/${message.guild.name}`, { recursive: true }).then(x => fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `"${message.createdAt}", Message: "${message.content}", Attachments: "${message.attachments.array()}", User: "${message.author.tag}", User ID: ${message.author.id}`));
+        fs.promises.mkdir(`./chatLogs/${message.guild.name}`, { recursive: true }).then(x => fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `Timestamp, M/E/D, Attachments, User, User ID\n"${message.createdAt}","${message.content}","${message.attachments.array()}","${message.author.tag}",${message.author.id}`));
       } else {
-        fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `\n"${message.createdAt}", Message: "${message.content}", Attachments: "${message.attachments.array()}", User: "${message.author.tag}", User ID: ${message.author.id}`);
+        fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `\n"${message.createdAt}","${message.content}","${message.attachments.array()}","${message.author.tag}",${message.author.id}`);
       }
     } else return;
   }
@@ -63,10 +67,6 @@ client.on('message', (message) => {
   console.log(`User: ${message.author.tag}`);
   console.log(`Server Name: ${message.guild.name}`);
   console.log(`${message.content.substring(0, `${config.prefix.length}`)}${command}`);
-
-  if (message.guild.name === TSserver.guildName) { const SC = TSserver; const SCCooldown = cooldown[0]; }
-  if (message.guild.name === DTMserver.guildName) { const SC = DTMserver; const SCCooldown = cooldown[1]; }
-  if (message.guild.name === GCserver.guildName) { const SC = GCserver; const SCCooldown = cooldown[2]; }
 
   if (command === 'ping') {
     message.channel.send('Self Pinging...').then((msg) => {
@@ -175,9 +175,9 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
   if (config.logChat === true) {
     if (oldMessage.channel.nsfw === false) {
       if (!fs.existsSync(`./chatLogs/${oldMessage.guild.name}/`)) {
-        fs.promises.mkdir(`./chatLogs/${oldMessage.guild.name}`, { recursive: true }).then(x => fs.promises.appendFile(`./chatLogs/${oldMessage.guild.name}/${oldMessage.channel.id}.csv`, `"${oldMessage.editedAt}", Message: "${oldMessage}" => "${newMessage}", Attachments: "${newMessage.attachments.array()}", User: "${oldMessage.author.tag}", User ID: ${oldMessage.author.id}`));
+        fs.promises.mkdir(`./chatLogs/${oldMessage.guild.name}`, { recursive: true }).then(x => fs.promises.appendFile(`./chatLogs/${oldMessage.guild.name}/${oldMessage.channel.id}.csv`, `Timestamp, M/E/D, Attachments, User, User ID\n"${oldMessage.editedAt}","${oldMessage}" => "${newMessage}","${newMessage.attachments.array()}","${oldMessage.author.tag}",${oldMessage.author.id}`));
       } else {
-        fs.promises.appendFile(`./chatLogs/${oldMessage.guild.name}/${oldMessage.channel.id}.csv`, `\n"${timeStamp}", Message Edited: "${oldMessage}" => "${newMessage}", Attachments: "${newMessage.attachments.array()}", User: "${oldMessage.author.tag}", User ID: ${oldMessage.author.id}`);
+        fs.promises.appendFile(`./chatLogs/${oldMessage.guild.name}/${oldMessage.channel.id}.csv`, `\n"${timeStamp}","${oldMessage}" => "${newMessage}","${newMessage.attachments.array()}","${oldMessage.author.tag}",${oldMessage.author.id}`);
       }
     }
   }
@@ -189,9 +189,9 @@ client.on('messageDelete', (message) => {
   if (config.logChat === true) {
     if (message.channel.nsfw === false) {
       if (!fs.existsSync(`./chatLogs/${message.guild.name}/`)) {
-        fs.promises.mkdir(`./chatLogs/${message.guild.name}`, { recursive: true }).then(x => fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `"${timeStamp}", Message Deleted: "${message}", Attachments: "${message.attachments.array()}", User: "${message.author.tag}", User ID: ${message.author.id}`));
+        fs.promises.mkdir(`./chatLogs/${message.guild.name}`, { recursive: true }).then(x => fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `Timestamp, M/E/D, Attachments, User, User ID\n"${timeStamp}","${message}","${message.attachments.array()}","${message.author.tag}",${message.author.id}`));
       } else {
-        fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `\n"${timeStamp}", Message Deleted: "${message}", Attachments: "${message.attachments.array()}", User: "${message.author.tag}", User ID: ${message.author.id}`);
+        fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `\n"${timeStamp}","${message}","${message.attachments.array()}","${message.author.tag}",${message.author.id}`);
       }
     }
   }
