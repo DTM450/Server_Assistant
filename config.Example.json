@@ -3,5 +3,6 @@
     "botID": "#BotID",
     "ownerID": "#OwnerID#",
     "prefix": "!",
-    "caseSensitivePrefix":true
+    "caseSensitivePrefix":true,
+    "logChat":true
 }
