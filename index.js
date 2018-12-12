@@ -19,7 +19,7 @@ const config = require('./config.json');
 childProcess.exec(`title ${Pkg.name} - ${Pkg.main}`);
 
 const client = new Discord.Client();
-// const guild = new Discord.Guild();
+const guild = new Discord.Guild();
 
 const TSserver = require('./Servers/TSserver.json');
 const DTMserver = require('./Servers/DTMserver.json');
@@ -34,6 +34,18 @@ client.on('ready', () => {
 
 client.on('message', (message) => {
   // console.log(guild.name)
+
+  // TODO: get image url from message.attachments.array
+
+  if (config.logChat === true) {
+    if (message.channel.nsfw === false) {
+      if (!fs.existsSync(`./chatLogs/${message.guild.name}/`)) {
+        fs.promises.mkdir(`./chatLogs/${message.guild.name}`, { recursive: true }).then(x => fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `"${message.createdAt}", Message: "${message.content}", Attachments: "${message.attachments.array()}", User: "${message.author.tag}", User ID: ${message.author.id}`));
+      } else {
+        fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `\n"${message.createdAt}", Message: "${message.content}", Attachments: "${message.attachments.array()}", User: "${message.author.tag}", User ID: ${message.author.id}`);
+      }
+    } else return;
+  }
 
   if (message.author.bot) return;
 
@@ -153,6 +165,34 @@ client.on('message', (message) => {
   if (command === 'kill') {
     if (message.author.id === config.ownerID) {
       process.exit(0);
+    }
+  }
+});
+
+client.on('messageUpdate', (oldMessage, newMessage) => {
+  const timeStamp = new Date();
+
+  if (config.logChat === true) {
+    if (oldMessage.channel.nsfw === false) {
+      if (!fs.existsSync(`./chatLogs/${oldMessage.guild.name}/`)) {
+        fs.promises.mkdir(`./chatLogs/${oldMessage.guild.name}`, { recursive: true }).then(x => fs.promises.appendFile(`./chatLogs/${oldMessage.guild.name}/${oldMessage.channel.id}.csv`, `"${oldMessage.editedAt}", Message: "${oldMessage}" => "${newMessage}", Attachments: "${newMessage.attachments.array()}", User: "${oldMessage.author.tag}", User ID: ${oldMessage.author.id}`));
+      } else {
+        fs.promises.appendFile(`./chatLogs/${oldMessage.guild.name}/${oldMessage.channel.id}.csv`, `\n"${timeStamp}", Message Edited: "${oldMessage}" => "${newMessage}", Attachments: "${newMessage.attachments.array()}", User: "${oldMessage.author.tag}", User ID: ${oldMessage.author.id}`);
+      }
+    }
+  }
+});
+
+client.on('messageDelete', (message) => {
+  const timeStamp = new Date();
+
+  if (config.logChat === true) {
+    if (message.channel.nsfw === false) {
+      if (!fs.existsSync(`./chatLogs/${message.guild.name}/`)) {
+        fs.promises.mkdir(`./chatLogs/${message.guild.name}`, { recursive: true }).then(x => fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `"${timeStamp}", Message Deleted: "${message}", Attachments: "${message.attachments.array()}", User: "${message.author.tag}", User ID: ${message.author.id}`));
+      } else {
+        fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `\n"${timeStamp}", Message Deleted: "${message}", Attachments: "${message.attachments.array()}", User: "${message.author.tag}", User ID: ${message.author.id}`);
+      }
     }
   }
 });
