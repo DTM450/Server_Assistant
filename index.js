@@ -20,6 +20,7 @@ childProcess.exec(`title ${Pkg.name} - ${Pkg.main}`);
 
 const client = new Discord.Client();
 const guild = new Discord.Guild();
+const MessageAttachment = new Discord.Attachment();
 
 const TSserver = require('./Servers/TSserver.json');
 const DTMserver = require('./Servers/DTMserver.json');
@@ -39,14 +40,12 @@ client.on('message', (message) => {
   if (message.guild.name === DTMserver.guildName) { const SC = DTMserver; const SCCooldown = cooldown[1]; }
   if (message.guild.name === GCserver.guildName) { const SC = GCserver; const SCCooldown = cooldown[2]; }
 
-  // TODO: get image url from message.attachments.array
-
   if (config.logChat === true) {
-    if (message.channel.nsfw === false) {
-      if (!fs.existsSync(`./chatLogs/${message.guild.name}/`)) {
-        fs.promises.mkdir(`./chatLogs/${message.guild.name}`, { recursive: true }).then(x => fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `TIMESTAMP,M/E/D,ATTACHMENTS,USER,USER ID\n"${message.createdAt}","${message.content}","${message.attachments.array()}","${message.author.tag}",${message.author.id}`));
+    if (!message.channel.nsfw) {
+      if (!fs.existsSync(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`)) {
+        fs.promises.mkdir(`./chatLogs/${message.guild.name}`, { recursive: true }).then(x => fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `TIMESTAMP,M/E/D,ATTACHMENTS,USER,USER ID\n"${message.createdAt}","${message.content}","${message.attachments.array()[0].url}","${message.author.tag}",${message.author.id}`));
       } else {
-        fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `\n"${message.createdAt}","${message.content}","${message.attachments.array()}","${message.author.tag}",${message.author.id}`);
+        fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `\n"${message.createdAt}","${message.content}","${message.attachments.array()[0].url}","${message.author.tag}",${message.author.id}`);
       }
     } else return;
   }
@@ -173,11 +172,11 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
   const timeStamp = new Date();
 
   if (config.logChat === true) {
-    if (oldMessage.channel.nsfw === false) {
-      if (!fs.existsSync(`./chatLogs/${oldMessage.guild.name}/`)) {
-        fs.promises.mkdir(`./chatLogs/${oldMessage.guild.name}`, { recursive: true }).then(x => fs.promises.appendFile(`./chatLogs/${oldMessage.guild.name}/${oldMessage.channel.id}.csv`, `TIMESTAMP,M/E/D,ATTACHMENTS,USER,USER ID\n"${oldMessage.editedAt}","${oldMessage}" => "${newMessage}","${newMessage.attachments.array()}","${oldMessage.author.tag}",${oldMessage.author.id}`));
+    if (!oldMessage.channel.nsfw) {
+      if (!fs.existsSync(`./chatLogs/${oldMessage.guild.name}/${oldMessage.channel.id}.csv`)) {
+        fs.promises.mkdir(`./chatLogs/${oldMessage.guild.name}`, { recursive: true }).then(x => fs.promises.appendFile(`./chatLogs/${oldMessage.guild.name}/${oldMessage.channel.id}.csv`, `TIMESTAMP,M/E/D,ATTACHMENTS,USER,USER ID\n"${oldMessage.editedAt}","${oldMessage}" => "${newMessage}","${newMessage.attachments.array()[0].url}","${oldMessage.author.tag}",${oldMessage.author.id}`));
       } else {
-        fs.promises.appendFile(`./chatLogs/${oldMessage.guild.name}/${oldMessage.channel.id}.csv`, `\n"${timeStamp}","${oldMessage}" => "${newMessage}","${newMessage.attachments.array()}","${oldMessage.author.tag}",${oldMessage.author.id}`);
+        fs.promises.appendFile(`./chatLogs/${oldMessage.guild.name}/${oldMessage.channel.id}.csv`, `\n"${timeStamp}","${oldMessage}" => "${newMessage}","${newMessage.attachments.array()[0].url}","${oldMessage.author.tag}",${oldMessage.author.id}`);
       }
     }
   }
@@ -187,11 +186,11 @@ client.on('messageDelete', (message) => {
   const timeStamp = new Date();
 
   if (config.logChat === true) {
-    if (message.channel.nsfw === false) {
-      if (!fs.existsSync(`./chatLogs/${message.guild.name}/`)) {
-        fs.promises.mkdir(`./chatLogs/${message.guild.name}`, { recursive: true }).then(x => fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `TIMESTAMP,M/E/D,ATTACHMENTS,USER,USER ID\n"${timeStamp}","${message}","${message.attachments.array()}","${message.author.tag}",${message.author.id}`));
+    if (!message.channel.nsfw) {
+      if (!fs.existsSync(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`)) {
+        fs.promises.mkdir(`./chatLogs/${message.guild.name}`, { recursive: true }).then(x => fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `TIMESTAMP,M/E/D,ATTACHMENTS,USER,USER ID\n"${timeStamp}","${message}","${message.attachments.array()[0].url}","${message.author.tag}",${message.author.id}`));
       } else {
-        fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `\n"${timeStamp}","${message}","${message.attachments.array()}","${message.author.tag}",${message.author.id}`);
+        fs.promises.appendFile(`./chatLogs/${message.guild.name}/${message.channel.id}.csv`, `\n"${timeStamp}","${message}","${message.attachments.array()[0].url}","${message.author.tag}",${message.author.id}`);
       }
     }
   }
